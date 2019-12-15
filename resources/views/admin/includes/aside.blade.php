@@ -35,9 +35,33 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{route('admin.category')}}" class="nav-link">
-                        <i class="nav-icon fa fa-th"></i>
+                        <i class="nav-icon fa fa-arrow-right"></i>
                         <p>
                             Category
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.brand')}}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-right"></i>
+                        <p>
+                            Brand
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('product.index')}}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-right"></i>
+                        <p>
+                            Product
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-right"></i>
+                        <p>
+                            User
                         </p>
                     </a>
                 </li>

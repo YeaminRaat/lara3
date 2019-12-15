@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Model\Category;
+use App\Model\Brand;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.home.home');
+        $category_count = Category::all()->count();
+        $brand_count = Brand::all()->count();
+        return view('admin.home.home', ['c_count'=>$category_count, 'b_count'=>$brand_count]);
     }
 }
