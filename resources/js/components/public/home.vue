@@ -88,9 +88,9 @@
                 <a href="#">
                   <i class="ti-heart"></i>
                 </a>
-                <a href="#">
-                  <i class="ti-shopping-cart"></i>
-                </a>
+                <button @click.prevent="addToCart(f_Product.id)">
+                    <i class="ti-shopping-cart"></i>
+                </button>
               </div>
             </div>
             <div class="product-btm">
@@ -292,21 +292,21 @@
               <div class="product-img">
                 <img class="img-fluid w-100" :src="`${newProduct.image}`" alt="">
                 <div class="p_icon">
-                  <a href="#">
+                  <router-link :to="`/single-product/${newProduct.id}`">
                     <i class="ti-eye"></i>
-                  </a>
+                  </router-link>
                   <a href="#">
                     <i class="ti-heart"></i>
                   </a>
-                  <a href="#">
+                  <button @click.prevent="addToCart(newProduct.id)">
                     <i class="ti-shopping-cart"></i>
-                  </a>
+                </button>
                 </div>
               </div>
               <div class="product-btm">
-                <a href="#" class="d-block">
+                <router-link :to="`/single-product/${newProduct.id}`" class="d-block">
                   <h4>{{newProduct.product_name}}</h4>
-                </a>
+                </router-link>
                 <div class="mt-3" v-if="newProduct.discount_price">
                 <span class="mr-4">৳ {{newProduct.discount_price}}</span>
                 <del>৳ {{newProduct.product_price}}</del>
@@ -419,9 +419,27 @@
 
 <script>
     export default {
+        methods:{
+            addToCart(id){
+                this.$Progress.start();
+                axios.post('/add-cart',{
+                    id: id
+                })
+                    .then((response)=>{
+                        //console.log(response.data)
+                        //this.$router.push('/cart')
+                        //alert("Added to Cart")
+                        
+                        this.$store.dispatch("countCart");
+                        this.$Progress.finish()
+                    })
+            }
+        },
         mounted() {
-            this.$store.dispatch("featuredProduct")
-            this.$store.dispatch("newProduct")
+            this.$Progress.start();
+            this.$store.dispatch("featuredProduct");
+            this.$store.dispatch("newProduct");
+            this.$Progress.finish();
         },
         computed: {
           showProduct(){

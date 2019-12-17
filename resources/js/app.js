@@ -8,6 +8,21 @@ Vue.use(VueRouter);
 import Vuex from 'vuex'					//import vuex
 Vue.use(Vuex)
 
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+  color: '#007bff',
+  failedColor: 'red',
+  thickness: '7px',
+  transition: {
+    speed: '0.2s',
+    opacity: '0.6s',
+    termination: 300
+  },
+  autoRevert: true,
+  location: 'top',
+  inverse: false
+})
+
 import storeData from './store/store.js'
 const store = new Vuex.Store(
   storeData
@@ -23,7 +38,7 @@ import {routes} from './routes.js';
 //router instance and pass the `routes` option
 const router = new VueRouter({
     routes,
-    mode:'history'
+    mode:'hash'
 })
 
 //vue instance

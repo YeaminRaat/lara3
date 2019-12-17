@@ -2,13 +2,20 @@
 
 Route::get('/','MainController@index')->name('homepage');
 Route::get('/all-category','MainController@getCategories');
+Route::get('/all-brand','MainController@getBrands');
 Route::get('/featured-product','MainController@getFeaturedProducts');
 Route::get('/new-product','MainController@getNewProducts');
 Route::get('/category/{id}','MainController@getCatProducts');
 Route::get('/product-details/{id}','MainController@getProductDetails');
 
 Route::post('/add-cart','CartController@addToCart');
+Route::post('/delete-cart','CartController@deleteCart');
+Route::post('/update-cart','CartController@updateCart');
 Route::get('/all-cart','CartController@allCart');
+//Route::get('/count-cart','CartController@countCart');
+
+Route::post('user-register','CustomerController@register');
+Route::post('user-login','CustomerController@login');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');

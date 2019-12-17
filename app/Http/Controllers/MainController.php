@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Category;
 use App\Model\Product;
+use App\Model\Brand;
 use DB;
 
 class MainController extends Controller
@@ -16,6 +17,11 @@ class MainController extends Controller
     public function getCategories(){
     	$categories = Category::where('cat_status', 1)->get();
         return response()->json($categories);
+    }
+
+    public function getBrands(){
+        $brands = Brand::where('brand_status', 1)->get();
+        return response()->json($brands);
     }
 
     public function getFeaturedProducts(){

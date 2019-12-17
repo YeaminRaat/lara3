@@ -19,7 +19,7 @@
                   >
                     <img
                       :src="`${singleProduct.image}`"
-                      alt="product image"
+                      alt="product image" class="w-100"
                     />
                   </li>
                   <li
@@ -27,8 +27,8 @@
                     data-slide-to="1"
                   >
                     <img
-                      src="img/product/single-product/s-product-s-3.jpg"
-                      alt=""
+                      :src="`${singleProduct.image}`"
+                      alt="" class="w-100"
                     />
                   </li>
                   <li
@@ -36,8 +36,8 @@
                     data-slide-to="2"
                   >
                     <img
-                      src="img/product/single-product/s-product-s-4.jpg"
-                      alt=""
+                      :src="`${singleProduct.image}`"
+                      alt="" class="w-100"
                     />
                   </li>
                 </ol>
@@ -52,14 +52,14 @@
                   <div class="carousel-item">
                     <img
                       class="d-block w-100"
-                      src="img/product/single-product/s-product-1.jpg"
+                      :src="`${singleProduct.image}`"
                       alt="Second slide"
                     />
                   </div>
                   <div class="carousel-item">
                     <img
                       class="d-block w-100"
-                      src="img/product/single-product/s-product-1.jpg"
+                      :src="`${singleProduct.image}`"
                       alt="Third slide"
                     />
                   </div>
@@ -70,7 +70,14 @@
           <div class="col-lg-5 offset-lg-1">
             <div class="s_product_text">
               <h3>{{singleProduct.product_name}}</h3>
-              <h2>{{singleProduct.discount_price}}</h2>
+              <span v-if="singleProduct.discount_price">
+                  <h2>৳ {{singleProduct.discount_price}}</h2>
+                  <del>৳ {{singleProduct.product_price}}</del>
+              </span>
+              <span v-else>
+                  <h2>৳ {{singleProduct.product_price}}</h2>
+                  
+              </span>
               <ul class="list">
                 <li>
                   <a class="active" href="#">
@@ -78,7 +85,7 @@
                   >
                 </li>
                 <li>
-                  <a href="#"> <span>Availibility</span> : In Stock</a>
+                  <span>Availibility</span> : In Stock
                 </li>
               </ul>
               <p>
@@ -91,8 +98,9 @@
                     />
                   </div>
                   <div class="card_area">
-                    <input type="submit" class="main_btn" value="Add to Cart">
                     
+                    <input type="button" class="main_btn" value="Buy Now">
+                    <input type="submit" class="main_btn" value="Add to Cart">
                   </div>
                 </form>
             </div>
@@ -323,7 +331,7 @@
                     class="row contact_form"
                     action="contact_process.php"
                     method="post"
-                    id="contactForm"
+                    id="contactForm1"
                     novalidate="novalidate"
                   >
                     <div class="col-md-12">
@@ -331,7 +339,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          id="name"
+                          id="name1"
                           name="name"
                           placeholder="Your Full name"
                         />
@@ -342,7 +350,7 @@
                         <input
                           type="email"
                           class="form-control"
-                          id="email"
+                          id="email1"
                           name="email"
                           placeholder="Email Address"
                         />
@@ -353,7 +361,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          id="number"
+                          id="number1"
                           name="number"
                           placeholder="Phone Number"
                         />
@@ -364,7 +372,7 @@
                         <textarea
                           class="form-control"
                           name="message"
-                          id="message"
+                          id="message1"
                           rows="1"
                           placeholder="Message"
                         ></textarea>
@@ -647,7 +655,9 @@
             }
         },
         mounted(){
+            this.$Progress.start();
             this.$store.dispatch("getProducstbyId", this.$route.params.id)
+            this.$Progress.finish();
         },
         computed:{
             singleProduct(){
@@ -656,13 +666,17 @@
         },
         methods: {
             addToCart(){
+              this.$Progress.start();
                 axios.post('/add-cart',{
                     qty: this.cartQty,
                     id: this.singleProduct.id
                 })
                     .then((response)=>{
-                        this.$router.push('/cart')
-                       
+                        
+                        this.$store.dispatch("getCartItem");
+                        this.$store.dispatch("countCart");
+                        this.$store.dispatch("getAllCarttotal");
+                        this.$Progress.finish()
                     })
             }
         }

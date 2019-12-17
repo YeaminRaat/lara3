@@ -23,6 +23,14 @@
     <link rel="stylesheet" href="{{asset('/front-end')}}/css/style.css" />
     <link rel="stylesheet" href="{{asset('/front-end')}}/css/responsive.css" />
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <style type="text/css">
+  .badge-notify{
+   background:#4CD964;
+   position:relative;
+   top: -15px;
+   left: -7px;
+  }
+  </style>
 </head>
 
 <body>
@@ -32,9 +40,11 @@
   <!--================Header Menu Area =================-->
 
   <router-view></router-view>
+  
 
   <!--================ start footer Area  =================-->
   <footer-section></footer-section>
+  <vue-progress-bar></vue-progress-bar>
   <!--================ End footer Area  =================-->
 </div>
   <!-- Optional JavaScript -->

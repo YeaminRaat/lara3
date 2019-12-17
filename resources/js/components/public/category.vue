@@ -1,25 +1,5 @@
 <template>
     <div>
-        <!--================Home Banner Area =================-->
-    <section class="banner_area">
-      <div class="banner_inner d-flex align-items-center">
-        <div class="container">
-          <div class="banner_content d-md-flex justify-content-between align-items-center">
-            <div class="mb-3 mb-md-0">
-              <h2>Shop Category</h2>
-              <p>Very us move be blessed multiply night</p>
-            </div>
-            <div class="page_link">
-              <a href="#">Home</a>
-              <a href="#">Shop</a>
-              <a href="#">Women Fashion</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--================End Home Banner Area =================-->
-
     <!--================Category Product Area =================-->
     <section class="cat_product_area section_gap">
       <div class="container">
@@ -47,21 +27,21 @@
                     <div class="product-img">
                       <img class="card-img" :src="`${catProduct.image}`" alt="" />
                       <div class="p_icon">
-                        <a href="#">
+                        <router-link :to="`/single-product/${catProduct.id}`">
                           <i class="ti-eye"></i>
-                        </a>
+                        </router-link>
                         <a href="#">
                           <i class="ti-heart"></i>
                         </a>
-                        <a href="#">
+                        <button @click.prevent="addToCart(catProduct.id)">
                           <i class="ti-shopping-cart"></i>
-                        </a>
+                        </button>
                       </div>
                     </div>
                     <div class="product-btm">
-                      <a href="#" class="d-block">
+                      <router-link :to="`/single-product/${catProduct.id}`">
                         <h4>{{catProduct.product_name}}</h4>
-                      </a>
+                      </router-link>
                       <div class="mt-3" v-if="catProduct.discount_price">
                         <span class="mr-4">৳ {{catProduct.discount_price}}</span>
                         <del>৳ {{catProduct.product_price}}</del>
@@ -85,27 +65,10 @@
                 </div>
                 <div class="widgets_inner">
                   <ul class="list">
-                    <li>
-                      <a href="#">Frozen Fish</a>
+                    <li v-for="category in showAllCategory">
+                      <a href="#">{{category.cat_name}}</a>
                     </li>
-                    <li>
-                      <a href="#">Dried Fish</a>
-                    </li>
-                    <li>
-                      <a href="#">Fresh Fish</a>
-                    </li>
-                    <li>
-                      <a href="#">Meat Alternatives</a>
-                    </li>
-                    <li>
-                      <a href="#">Fresh Fish</a>
-                    </li>
-                    <li>
-                      <a href="#">Meat Alternatives</a>
-                    </li>
-                    <li>
-                      <a href="#">Meat</a>
-                    </li>
+                    
                   </ul>
                 </div>
               </aside>
@@ -116,46 +79,10 @@
                 </div>
                 <div class="widgets_inner">
                   <ul class="list">
-                    <li>
-                      <a href="#">Apple</a>
+                    <li v-for="brand in showAllBrands">
+                      <a href="#">{{brand.brand_name}}</a>
                     </li>
-                    <li>
-                      <a href="#">Asus</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Gionee</a>
-                    </li>
-                    <li>
-                      <a href="#">Micromax</a>
-                    </li>
-                    <li>
-                      <a href="#">Samsung</a>
-                    </li>
-                  </ul>
-                </div>
-              </aside>
-
-              <aside class="left_widgets p_filter_widgets">
-                <div class="l_w_title">
-                  <h3>Color Filter</h3>
-                </div>
-                <div class="widgets_inner">
-                  <ul class="list">
-                    <li>
-                      <a href="#">Black</a>
-                    </li>
-                    <li>
-                      <a href="#">Black Leather</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Black with red</a>
-                    </li>
-                    <li>
-                      <a href="#">Gold</a>
-                    </li>
-                    <li>
-                      <a href="#">Spacegrey</a>
-                    </li>
+                    
                   </ul>
                 </div>
               </aside>
@@ -169,7 +96,7 @@
                     <div id="slider-range"></div>
                     <div class="">
                       <label for="amount">Price : </label>
-                      <input type="text" id="amount" readonly />
+                      <input type="text" id="amount" />
                     </div>
                   </div>
                 </div>
@@ -186,21 +113,43 @@
 <script>
     export default {
         mounted(){
+              this.$Progress.start();
               this.$store.dispatch("categoryByID", this.$route.params.id)
+              this.$store.dispatch("category")
+              this.$store.dispatch("brand")
+              this.$Progress.finish();
         },
         methods: {
             gProduct(){
               this.$store.dispatch("categoryByID", this.$route.params.id)
+            },
+            addToCart(id){
+                this.$Progress.start();
+                axios.post('/add-cart',{
+                    id: id
+                })
+                    .then((response)=>{
+                        this.$store.dispatch("countCart")
+                        this.$Progress.finish();
+                    })
             }
         },
         computed: {
             showCatProduct(){
                 return this.$store.getters.getCatProduct
+            },
+            showAllCategory(){
+                return this.$store.getters.getCategory
+            },
+            showAllBrands(){
+                return this.$store.getters.getBrand
             }
         },
         watch: {
           $route(to,from){
+            this.$Progress.start();
             this.gProduct();
+            this.$Progress.finish();
           }
         }
     }

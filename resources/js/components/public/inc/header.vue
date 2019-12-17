@@ -64,19 +64,6 @@
 
                     </ul>
                   </li>
-                  
-                  <li class="nav-item submenu dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                      aria-expanded="false">Pages</a>
-                    <ul class="dropdown-menu">
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Tracking</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Elements</a>
-                      </li>
-                    </ul>
-                  </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>
                   </li>
@@ -93,14 +80,15 @@
 
                   <li class="nav-item">
                     <router-link to="/cart" class="icons">
-                      <i class="ti-shopping-cart"></i>
+                      <i class="fas fa-shopping-cart"></i>
+                      <span class="badge badge-notify" >{{showCountCart}}</span>
                     </router-link>
+                    
                   </li>
-
                   <li class="nav-item">
-                    <a href="#" class="icons">
+                    <router-link to="/user-login" class="icons">
                       <i class="ti-user" aria-hidden="true"></i>
-                    </a>
+                    </router-link>
                   </li>
 
                   <li class="nav-item">
@@ -127,11 +115,21 @@
             }
         },
         created(){
+          
             axios.get('/all-category')
                 .then((response =>{
-                    
                     this.categories = response.data
                 }))
+        },
+        mounted(){
+          this.$Progress.start();
+          this.$store.dispatch("countCart");
+          this.$Progress.finish();
+        },
+        computed:{
+          showCountCart(){
+              return this.$store.getters.getCountCart
+          }
         }
     }
 </script>

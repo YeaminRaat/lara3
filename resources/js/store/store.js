@@ -1,16 +1,26 @@
 export default {
   state: {
-		featuredProducts: [],
+		categories: [],
+    brands: [],
+    featuredProducts: [],
     newProducts: [],
     catProducts: [],
     singleProducts: [],
-    cartProduct: []
+    cartProduct: [],
+    countCart: [],
+    subtotalCart: []
   },
 
   getters: {
-    getfeaturedProduct(state){
-  		return state.featuredProducts
+    getCategory(state){
+  		return state.categories
   	},
+    getBrand(state){
+      return state.brands
+    },
+    getfeaturedProduct(state){
+      return state.featuredProducts
+    },
     getNewProduct(state){
       return state.newProducts
     },
@@ -22,10 +32,30 @@ export default {
     },
     getCartItem(state){
       return state.cartProduct
+    },
+    getCountCart(state){
+      return state.countCart
+    },
+    getCartSubtotal(state){
+      return state.subtotalCart
     }
   },
 
   actions: {
+    category(context){
+      axios.get('/all-category')
+          .then((response) =>{
+            //console.log(response.data)
+            context.commit("allCategory", response.data)
+          })
+    },
+    brand(context){
+      axios.get('/all-brand')
+          .then((response) =>{
+            //console.log(response.data)
+            context.commit("allBrand", response.data)
+          })
+    },
     featuredProduct(context){
       axios.get('/featured-product')
           .then((response) =>{
@@ -57,13 +87,33 @@ export default {
     getCartItem(context){
       axios.get('/all-cart')
           .then((response) =>{
-            //console.log(response.data)
-            context.commit("allCartItem", response.data)
+            //console.log(response.data.cart)
+            context.commit("allCartItem", response.data.cart)
+          })
+    },
+    countCart(context){
+      axios.get('/all-cart')
+          .then((response) =>{
+            //console.log(response.data.cart)
+            context.commit("countCartItem", response.data.count_cart)
+          })
+    },
+    getAllCarttotal(context){
+      axios.get('/all-cart')
+          .then((response) =>{
+            //console.log(response.data.cart)
+            context.commit("allCarttotal", response.data.subtotal)
           })
     }
   },
 
 	mutations: {
+    allCategory(state, data){
+      return state.categories = data
+    },
+    allBrand(state, data){
+      return state.brands = data
+    },
     featureProducts(state, data){
       return state.featuredProducts = data
     },
@@ -78,6 +128,12 @@ export default {
     },
     allCartItem(state, data){
       return state.cartProduct = data
+    },
+    countCartItem(state, data){
+      return state.countCart = data
+    },
+    allCarttotal(state, data){
+      return state.subtotalCart = data
     }
   }
 }
