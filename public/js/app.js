@@ -3619,11 +3619,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {},
+  data: function data() {
+    return {
+      form: [],
+      error: '',
+      success: ''
+    };
+  },
   methods: {
     login: function login() {
-      axios.post('user-login');
+      var _this = this;
+
+      this.success = '', this.error = '', axios.post('user-login', {
+        email_address: this.form.email_address,
+        password: this.form.password
+      }).then(function (response) {
+        if (response.data == 'Error') {
+          _this.error = 'Invalid Credential';
+        } else {
+          //console.log(response)
+          _this.success = 'Login Success';
+          _this.form = [];
+        }
+      });
     }
   }
 });
@@ -3690,11 +3712,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "userRegister",
   data: function data() {
     return {
-      form: {}
+      form: {},
+      error: [],
+      success: ''
     };
   },
   mounted: function mounted() {},
@@ -3702,8 +3731,7 @@ __webpack_require__.r(__webpack_exports__);
     register: function register() {
       var _this = this;
 
-      //console.log(this.form.first_name);
-      this.$Progress.start();
+      this.error = [], this.success = '', this.$Progress.start();
       axios.post('user-register', {
         first_name: this.form.first_name,
         last_name: this.form.last_name,
@@ -3712,10 +3740,18 @@ __webpack_require__.r(__webpack_exports__);
         password: this.form.password,
         address: this.form.address
       }).then(function (response) {
-        //console.log(response.data)
-        _this.$Progress.finish();
+        //console.log(response.data.errors)
+        //this.$router.push('/user-login')
+        _this.success = 'Thanks For Registration. We have email you with password.';
+        _this.form = [];
 
-        _this.$router.push('/user-login');
+        _this.$Progress.finish();
+      })["catch"](function (error) {
+        if (error.response.status == 422) {
+          _this.error = error.response.data.errors;
+
+          _this.$Progress.finish();
+        }
       });
     }
   }
@@ -57106,13 +57142,114 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-md-12" }, [
           _c("div", { staticClass: "card mt-5 mb-5 col-md-6" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "card-header text-center" }, [
+              _c("h3", [_vm._v("Please Login")]),
+              _vm._v(" "),
+              _vm.success
+                ? _c("h5", { staticClass: "text-success" }, [
+                    _vm._v(_vm._s(_vm.success))
+                  ])
+                : _vm._e()
+            ]),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "card-body" },
               [
-                _vm._m(1),
+                _c(
+                  "form",
+                  {
+                    attrs: { method: "post" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.login($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Email address")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form["email_address"],
+                            expression: "form['email_address']"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "email",
+                          name: "email_address",
+                          required: ""
+                        },
+                        domProps: { value: _vm.form["email_address"] },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "email_address",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.error
+                        ? _c("span", { staticClass: "text-danger" }, [
+                            _vm._v(_vm._s(_vm.error))
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Password")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form["password"],
+                            expression: "form['password']"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "password", name: "password" },
+                        domProps: { value: _vm.form["password"] },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "password", $event.target.value)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.error.password
+                        ? _c("span", { staticClass: "text-danger" }, [
+                            _vm._v(_vm._s(_vm.error.password[0]))
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Login")]
+                    )
+                  ]
+                ),
                 _vm._v(" "),
                 _c("router-link", { attrs: { to: "/user-register" } }, [
                   _vm._v("Register Here")
@@ -57126,46 +57263,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header text-center" }, [
-      _c("h3", [_vm._v("Please Login")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", [
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", [_vm._v("Email address")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "email", name: "email_address" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", [_vm._v("Password")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "password", name: "password" }
-        })
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-        [_vm._v("Login")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -57192,7 +57290,15 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-md-12" }, [
           _c("div", { staticClass: "card mt-5 mb-5 col-md-6" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "card-header text-center" }, [
+              _c("h3", [_vm._v("Please Register")]),
+              _vm._v(" "),
+              _vm.success
+                ? _c("h4", { staticClass: "text-success" }, [
+                    _vm._v(_vm._s(_vm.success))
+                  ])
+                : _vm._e()
+            ]),
             _vm._v(" "),
             _c(
               "div",
@@ -57237,7 +57343,13 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _vm.error.first_name
+                        ? _c("span", { staticClass: "text-danger" }, [
+                            _vm._v(_vm._s(_vm.error.first_name[0]))
+                          ])
+                        : _vm._e()
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
@@ -57293,7 +57405,13 @@ var render = function() {
                             )
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _vm.error.email_address
+                        ? _c("span", { staticClass: "text-danger" }, [
+                            _vm._v(_vm._s(_vm.error.email_address[0]))
+                          ])
+                        : _vm._e()
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
@@ -57345,7 +57463,13 @@ var render = function() {
                             _vm.$set(_vm.form, "password", $event.target.value)
                           }
                         }
-                      })
+                      }),
+                      _vm._v(" "),
+                      _vm.error.password
+                        ? _c("span", { staticClass: "text-danger" }, [
+                            _vm._v(_vm._s(_vm.error.password[0]))
+                          ])
+                        : _vm._e()
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
@@ -57386,7 +57510,7 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("router-link", { attrs: { to: "/user-login" } }, [
-                  _vm._v("Register Here")
+                  _vm._v("Login Here")
                 ])
               ],
               1
@@ -57397,16 +57521,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header text-center" }, [
-      _c("h3", [_vm._v("Please Register")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
