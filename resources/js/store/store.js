@@ -8,7 +8,8 @@ export default {
     singleProducts: [],
     cartProduct: [],
     countCart: [],
-    subtotalCart: []
+    subtotalCart: [],
+    customerSession:[]
   },
 
   getters: {
@@ -38,6 +39,9 @@ export default {
     },
     getCartSubtotal(state){
       return state.subtotalCart
+    },
+    getSessionData(state){
+      return state.customerSession
     }
   },
 
@@ -104,6 +108,13 @@ export default {
             //console.log(response.data.cart)
             context.commit("allCarttotal", response.data.subtotal)
           })
+    },
+    customerSession(context){
+      axios.get('/customer-session')
+          .then((response)=>{
+            //console.log(response.data.s_customer)
+            context.commit("sessionData", response.data.s_customer)
+          })
     }
   },
 
@@ -134,6 +145,9 @@ export default {
     },
     allCarttotal(state, data){
       return state.subtotalCart = data
+    },
+    sessionData(state, data){
+      return state.customerSession = data
     }
   }
 }

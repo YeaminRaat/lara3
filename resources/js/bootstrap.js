@@ -13,6 +13,8 @@ try {
     require('bootstrap');
     require('admin-lte');
     require('datatables.net-bs4');
+    require('@fortawesome/fontawesome-free');
+    
 } catch (e) {}
 
 /**

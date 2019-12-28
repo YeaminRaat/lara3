@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Hash;
 use Session;
 use App\Model\Customer;
+use App\Model\Shipping_address;
 use Mail;
 
 class CustomerController extends Controller
@@ -38,6 +39,7 @@ class CustomerController extends Controller
     	$customer->password = bcrypt($request->password);
     	$customer->address = $request->address;
     	$customer->save();
+        Session::put('customerId',$customer->id);
 
     	/*$data = $customer->toArray();
         Mail::send('vendor.mail',$data,function ($message) use ($data){
@@ -52,8 +54,8 @@ class CustomerController extends Controller
     	$customer = Customer::where('email_address',$request->email_address)->first();
     	if ($customer) {
     		if (Hash::check($request->password, $customer->password)) {
-    			Session::put('customerId',$customer->Id);
-    			Session::put('customerName',$customer->first_name.' '.$customer->last_name);
+    			Session::put('customerId',$customer->id);
+    			//Session::put('customerName',$customer->first_name.' '.$customer->last_name);
 
     			return response()->json($customer);
     		};
@@ -66,5 +68,19 @@ class CustomerController extends Controller
     	}else{
     		return response()->json("Error");
     	}*/
+    }
+
+    public function logout(){
+        Session::forget('customerId');
+        return response()->json("Logout done");
+    }
+
+    public function sessionData(){
+        $id = Session::get('customerId');
+        $customer = Customer::find($id);
+
+        return response()->json([
+            's_customer' => $customer
+        ]);
     }
 }

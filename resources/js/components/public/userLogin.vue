@@ -3,8 +3,8 @@
     <div class="container">
         <div class="row">
             
-            <div class="col-md-12">
-                <div class="card mt-5 mb-5 col-md-6">
+            <div class="offset-3 col-md-6">
+                <div class="card mt-5 mb-5">
                     <div class="card-header text-center">
                         <h3>Please Login</h3>
                         <h5 v-if="success" class="text-success">{{success}}</h5>
@@ -57,6 +57,8 @@
                         //console.log(response)
                         this.success = 'Login Success'
                         this.form = []
+                        this.$store.dispatch("customerSession");
+                        this.$router.push('/')
                     }
                 })
             }

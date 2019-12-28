@@ -34,6 +34,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{route('product.index')}}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-right"></i>
+                        <p>
+                            Product
+                        </p>
+                    </a>
+                </li>
+                @if(Auth::user()->role == '1')
+                <li class="nav-item">
                     <a href="{{route('admin.category')}}" class="nav-link">
                         <i class="nav-icon fa fa-arrow-right"></i>
                         <p>
@@ -49,22 +58,24 @@
                         </p>
                     </a>
                 </li>
+                
                 <li class="nav-item">
-                    <a href="{{route('product.index')}}" class="nav-link">
+                    <a href="{{route('admin.order')}}" class="nav-link">
                         <i class="nav-icon fa fa-arrow-right"></i>
                         <p>
-                            Product
+                            Order
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="{{route('admin.user')}}" class="nav-link">
                         <i class="nav-icon fa fa-arrow-right"></i>
                         <p>
                             User
                         </p>
                     </a>
                 </li>
+                @endif
 
             </ul>
         </nav>

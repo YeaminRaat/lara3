@@ -62,4 +62,20 @@ class MainController extends Controller
         //var_dump($Product);
         return response()->json($Product);
     }
+
+    public function getProductSearch(Request $request){
+        $searchProduct = Product::where('product_name', 'LIKE', "%$request->searchKey%")->get();
+        return response()->json([
+            'searchData' => $searchProduct
+        ]);
+    }
+
+    public function getProductCheckbox(Request $request){
+        
+        $product = Product::where('cat_id', $request->category)->get();
+
+        return response()->json([
+            'multiProduct' => $product
+        ]);
+    }
 }

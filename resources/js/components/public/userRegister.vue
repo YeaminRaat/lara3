@@ -3,8 +3,8 @@
     <div class="container">
         <div class="row">
             
-            <div class="col-md-12">
-                <div class="card mt-5 mb-5 col-md-6">
+            <div class="offset-3 col-md-6">
+                <div class="card mt-5 mb-5">
                     <div class="card-header text-center">
                         <h3>Please Register</h3>
                         <h4 v-if="success" class="text-success">{{success}}</h4>
@@ -59,7 +59,7 @@
         name: "userRegister",
         data(){
             return{
-                form:{},
+                form:[],
                 error:[],
                 success:''
             }
@@ -85,6 +85,7 @@
                     //this.$router.push('/user-login')
                     this.success = 'Thanks For Registration. We have email you with password.'
                     this.form = []
+                    this.$store.dispatch("customerSession");
                     this.$Progress.finish();
                 })
                 .catch((error)=>{

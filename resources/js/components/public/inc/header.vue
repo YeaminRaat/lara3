@@ -11,21 +11,28 @@
           </div>
           <div class="col-lg-5">
             <div class="float-right">
-              <ul class="right_side">
+              <ul class="right_side" v-if="showSession">
                 <li>
                   <a href="#">
-                    gift card
+                    {{showSession.first_name}}
                   </a>
                 </li>
                 <li>
-                  <a href="#">
-                    track order
+                  <a @click.prevent="logout" href="">
+                    Logout
                   </a>
                 </li>
+              </ul>
+              <ul class="right_side" v-else>
                 <li>
-                  <a href="#">
-                    Contact Us
-                  </a>
+                  <router-link to="/user-login">
+                    Login
+                  </router-link>
+                </li>
+                <li>
+                  <router-link to="/user-register">
+                    Register
+                  </router-link>
                 </li>
               </ul>
             </div>
@@ -61,7 +68,6 @@
                       <li class="nav-item" v-for="category in categories">
                         <router-link class="nav-link" :to="`/category/${category.id}`">{{category.cat_name}}</router-link>
                       </li>
-
                     </ul>
                   </li>
                   <li class="nav-item">
@@ -72,7 +78,14 @@
 
               <div class="col-lg-5 pr-0">
                 <ul class="nav navbar-nav navbar-right right_nav pull-right">
-                  <li class="nav-item">
+                  <li class="nav-item submenu dropdown">
+                    <input type="search" v-model="searchKey" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
+                      aria-expanded="false" placeholder="search product">
+                      <ul class="dropdown-menu" v-if="searchKey">
+                      <li class="nav-item" v-for="search in searchResult">
+                        <router-link class="nav-link" :to="`/single-product/${search.id}`">{{search.product_name}}</router-link>
+                      </li>
+                      </ul>
                     <a href="#" class="icons">
                       <i class="ti-search" aria-hidden="true"></i>
                     </a>
@@ -111,11 +124,13 @@
       name: "header_area",
       data(){
             return{
-                categories:[]
+                categories:[],
+                session:'',
+                searchKey:'',
+                searchResult:[]
             }
         },
         created(){
-          
             axios.get('/all-category')
                 .then((response =>{
                     this.categories = response.data
@@ -124,12 +139,40 @@
         mounted(){
           this.$Progress.start();
           this.$store.dispatch("countCart");
+          this.$store.dispatch("customerSession");
           this.$Progress.finish();
         },
         computed:{
           showCountCart(){
               return this.$store.getters.getCountCart
+          },
+          showSession(){
+              return this.$store.getters.getSessionData
           }
+        },
+        methods:{
+          logout(){
+            axios.get('user-logout')
+              .then((response)=>{
+                //console.log(response.data)
+                this.$store.dispatch("customerSession");
+              })
+          },
+          search(){
+            axios.post('/search-product',{
+              searchKey: this.searchKey
+            })
+            .then((response)=>{
+              //console.log(response.data.searchData)
+              this.searchResult = response.data.searchData
+              
+            })
+          }
+        },
+        watch: {
+        searchKey(after, before) {
+            this.search();
         }
+    },
     }
 </script>

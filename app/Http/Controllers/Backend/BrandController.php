@@ -8,6 +8,11 @@ use App\Model\Brand;
 
 class BrandController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+    
     public function index(){
         $brand = Brand::all();
         return view('admin.brand.brand', ['brands' => $brand]);

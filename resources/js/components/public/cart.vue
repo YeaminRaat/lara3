@@ -8,6 +8,7 @@
             <table class="table">
               <thead>
                 <tr>
+                  <th scope="col"></th>
                   <th scope="col">Product</th>
                   <th scope="col">Price</th>
                   <th scope="col">Quantity</th>
@@ -17,6 +18,7 @@
               </thead>
               <tbody>
                 <tr v-for='cart in showCartItem'>
+                  <td><input type="checkbox" :value="cart.rowId"  v-model="checkItem" name=""></td>
                   <td>
                     <div class="media">
                       <div class="d-flex">
@@ -47,7 +49,7 @@
                   <td>
                     
                   </td>
-                  <td><button @click.prevent="start">Progress Bar</button></td>
+                  <td>{{checkItem}}</td>
                   <td><h5>Subtotal</h5></td>
                   <td>
                     <h5>৳ {{showSubtotal}}</h5>
@@ -60,9 +62,13 @@
                   <td></td>
                   
                   <td>
-                    <div class="checkout_btn_inner">
+                    <div class="checkout_btn_inner" v-if="showSession">
                       <router-link class="gray_btn" to="/">Continue Shopping</router-link>
-                      <a class="main_btn" href="#">Proceed to checkout</a>
+                      <router-link class="main_btn" to="/shipping">Proceed to checkout</router-link>
+                    </div>
+                    <div class="checkout_btn_inner" v-else>
+                      <router-link class="gray_btn" to="/">Continue Shopping</router-link>
+                      <router-link class="main_btn" to="/user-login">Proceed to checkout</router-link>
                     </div>
                   </td>
                 </tr>
@@ -79,7 +85,11 @@
 <script>
     export default {
         name: "cart",
-        
+        data(){
+          return{
+            checkItem:[]
+          }
+        },
         methods:{
           removeCart(rowId){
               this.$Progress.start();
@@ -122,6 +132,9 @@
           },
           showSubtotal(){
             return this.$store.getters.getCartSubtotal
+          },
+          showSession(){
+              return this.$store.getters.getSessionData
           }
         }
     }

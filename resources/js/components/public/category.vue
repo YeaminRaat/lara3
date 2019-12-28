@@ -3,7 +3,56 @@
     <!--================Category Product Area =================-->
     <section class="cat_product_area section_gap">
       <div class="container">
-        <div class="row flex-row-reverse">
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="left_sidebar_area">
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Browse Categories</h3>
+                </div>
+                <div class="widgets_inner">
+                  <ul class="list">
+                    <li v-for="category in showAllCategory">
+                      <input type="checkbox" :id="category.id" v-model="cat" :value="category.id">
+                      <label :for="category.id">{{category.cat_name}}</label>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </aside>
+
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Product Brand</h3>
+                </div>
+                <div class="widgets_inner">
+                  <ul class="list">
+                    <li v-for="brand in showAllBrands">
+                      <input type="checkbox" :id="brand.id" v-model="bra" :value="brand.id">
+                      <label :for="brand.id">{{brand.brand_name}}</label>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </aside>
+
+              <aside class="left_widgets p_filter_widgets">
+                <div class="l_w_title">
+                  <h3>Price Filter</h3>
+                </div>
+                <div class="widgets_inner">
+                  <div class="range_item">
+                    <div id="slider-range"></div>
+                    <div class="">
+                      <label for="amount">Price : </label>
+                      <input type="text" id="amount" />
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+
           <div class="col-lg-9">
             <div class="product_top_bar">
               <div class="left_dorp">
@@ -57,52 +106,6 @@
             </div>
           </div>
 
-          <div class="col-lg-3">
-            <div class="left_sidebar_area">
-              <aside class="left_widgets p_filter_widgets">
-                <div class="l_w_title">
-                  <h3>Browse Categories</h3>
-                </div>
-                <div class="widgets_inner">
-                  <ul class="list">
-                    <li v-for="category in showAllCategory">
-                      <a href="#">{{category.cat_name}}</a>
-                    </li>
-                    
-                  </ul>
-                </div>
-              </aside>
-
-              <aside class="left_widgets p_filter_widgets">
-                <div class="l_w_title">
-                  <h3>Product Brand</h3>
-                </div>
-                <div class="widgets_inner">
-                  <ul class="list">
-                    <li v-for="brand in showAllBrands">
-                      <a href="#">{{brand.brand_name}}</a>
-                    </li>
-                    
-                  </ul>
-                </div>
-              </aside>
-
-              <aside class="left_widgets p_filter_widgets">
-                <div class="l_w_title">
-                  <h3>Price Filter</h3>
-                </div>
-                <div class="widgets_inner">
-                  <div class="range_item">
-                    <div id="slider-range"></div>
-                    <div class="">
-                      <label for="amount">Price : </label>
-                      <input type="text" id="amount" />
-                    </div>
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -112,6 +115,12 @@
 
 <script>
     export default {
+        data(){
+          return{
+            cat:[],
+            bra:[]
+          }
+        },
         mounted(){
               this.$Progress.start();
               this.$store.dispatch("categoryByID", this.$route.params.id)
@@ -132,6 +141,15 @@
                         this.$store.dispatch("countCart")
                         this.$Progress.finish();
                     })
+            },
+            checkboxSearch(){
+              axios.post('/search-checkbox',{
+                category: this.cat,
+                brand: this.bra
+              })
+              .then((response)=>{
+                //console.log(response.data.multiProduct)
+              })
             }
         },
         computed: {
@@ -150,7 +168,10 @@
             this.$Progress.start();
             this.gProduct();
             this.$Progress.finish();
-          }
+          },
+          /*cat(after,before){
+            this.checkboxSearch();
+          }*/
         }
     }
 </script>

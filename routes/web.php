@@ -8,14 +8,22 @@ Route::get('/new-product','MainController@getNewProducts');
 Route::get('/category/{id}','MainController@getCatProducts');
 Route::get('/product-details/{id}','MainController@getProductDetails');
 
+Route::post('/search-checkbox','MainController@getProductCheckbox');
+Route::post('/search-product','MainController@getProductSearch');
+
 Route::post('/add-cart','CartController@addToCart');
 Route::post('/delete-cart','CartController@deleteCart');
 Route::post('/update-cart','CartController@updateCart');
 Route::get('/all-cart','CartController@allCart');
 //Route::get('/count-cart','CartController@countCart');
 
-Route::post('user-register','CustomerController@register');
-Route::post('user-login','CustomerController@login');
+Route::post('/user-register','CustomerController@register');
+Route::post('/user-login','CustomerController@login');
+Route::get('/user-logout','CustomerController@logout');
+Route::get('/customer-session','CustomerController@sessionData');
+
+Route::post('/shipping-info','OrderController@shippingInfo');
+Route::post('/confirm-order','OrderController@confirmOrder');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
@@ -43,6 +51,15 @@ Route::group(['prefix'=>'admin','namespace'=>'Backend', 'middleware'=>'auth'], f
     //product
     Route::resource('product', 'ProductController');
 
+    //order
+    Route::get('/order','OrderController@index')->name('admin.order');
+    Route::get('/order/details/{id}','OrderController@viewOrderDetails')->name('view-order-details');
+    Route::get('/order/invoice/{id}','OrderController@orderInvoice')->name('order.invoice');
+    Route::get('/order/export-pdf/{id}','OrderController@orderExportPdf')->name('order.export.pdf');
+
+    //user
+    Route::get('/user','UserController@index')->name('admin.user');
+    Route::post('/user','UserController@create');
 
 });
 

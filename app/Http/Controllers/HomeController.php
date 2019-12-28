@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Category;
 use App\Model\Brand;
+use App\Model\Product;
+use App\Model\Order;
 
 class HomeController extends Controller
 {
@@ -27,6 +29,13 @@ class HomeController extends Controller
     {
         $category_count = Category::all()->count();
         $brand_count = Brand::all()->count();
-        return view('admin.home.home', ['c_count'=>$category_count, 'b_count'=>$brand_count]);
+        $product_count = Product::all()->count();
+        $order_count = Order::all()->count();
+        return view('admin.home.home', [
+            'c_count'=>$category_count,
+            'b_count'=>$brand_count,
+            'p_count'=>$product_count,
+            'o_count'=>$order_count
+        ]);
     }
 }
