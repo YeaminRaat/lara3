@@ -11,6 +11,9 @@ Route::get('/product-details/{id}','MainController@getProductDetails');
 Route::post('/search-checkbox','MainController@getProductCheckbox');
 Route::post('/search-product','MainController@getProductSearch');
 
+Route::get('/product-comment/{productId}','MainController@getProductComment');
+Route::post('/product-comment','MainController@productComment');
+
 Route::post('/add-cart','CartController@addToCart');
 Route::post('/delete-cart','CartController@deleteCart');
 Route::post('/update-cart','CartController@updateCart');
@@ -24,6 +27,9 @@ Route::get('/customer-session','CustomerController@sessionData');
 
 Route::post('/shipping-info','OrderController@shippingInfo');
 Route::post('/confirm-order','OrderController@confirmOrder');
+
+//Route::get('stripe', 'OrderController@stripe');
+Route::post('stripe', 'OrderController@stripePost')->name('stripe.post');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');

@@ -41,11 +41,11 @@ class CustomerController extends Controller
     	$customer->save();
         Session::put('customerId',$customer->id);
 
-    	/*$data = $customer->toArray();
+    	$data = $customer->toArray();
         Mail::send('vendor.mail',$data,function ($message) use ($data){
             $message->to($data['email_address']);
             $message->subject('Welcome to Eiser Shop');
-        });*/
+        });
 
     	return response()->json('Done');
     }

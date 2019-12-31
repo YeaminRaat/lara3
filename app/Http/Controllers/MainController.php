@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\Category;
 use App\Model\Product;
 use App\Model\Brand;
+use App\Model\Comment;
 use DB;
 
 class MainController extends Controller
@@ -77,5 +78,26 @@ class MainController extends Controller
         return response()->json([
             'multiProduct' => $product
         ]);
+    }
+
+    public function productComment(Request $request){
+        $comment = new Comment();
+        $comment->commenter_id = $request->commenterId;
+        $comment->commentable_id = $request->productId;
+        $comment->comment = $request->commentText;
+        $comment->save();
+
+        return response()->json($comment);
+    }
+
+    public function getProductComment($productId){
+        //$comment = Comment::where('commentable_id', $productId)->get();
+        $comment = DB::table('comments')
+                    ->join('customers','comments.commenter_id', '=', 'customers.id')
+                    ->where('comments.commentable_id', '=', $productId)
+                    ->select('comments.*', 'customers.first_name', 'customers.last_name')
+                    ->get();
+
+        return response()->json($comment);
     }
 }

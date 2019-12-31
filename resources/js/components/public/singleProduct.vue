@@ -170,131 +170,48 @@
             
           </div>
         </div>
-        <div
-          class="tab-pane fade"
-          id="contact"
-          role="tabpanel"
-          aria-labelledby="contact-tab"
-          >
+        <div class="tab-pane fade" id="contact"  role="tabpanel" aria-labelledby="contact-tab">
           <div class="row">
             <div class="col-lg-6">
               <div class="comment_list">
-                <div class="review_item">
+                <div class="review_item" v-for="comment in showComment">
                   <div class="media">
                     <div class="d-flex">
                       <img
-                      src="img/product/single-product/review-1.png"
-                      alt=""
+                      src="images/avatar.png"
+                      alt="User"
                       />
                     </div>
                     <div class="media-body">
-                      <h4>Blake Ruiz</h4>
-                      <h5>12th Feb, 2017 at 05:56 pm</h5>
-                      <a class="reply_btn" href="#">Reply</a>
+                      <h4>{{comment.first_name +' '+ comment.last_name}}</h4>
+                      <h5>{{comment.created_at}}</h5>
+                      
                     </div>
                   </div>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
-                  </p>
-                </div>
-                <div class="review_item reply">
-                  <div class="media">
-                    <div class="d-flex">
-                      <img
-                      src="img/product/single-product/review-2.png"
-                      alt=""
-                      />
-                    </div>
-                    <div class="media-body">
-                      <h4>Blake Ruiz</h4>
-                      <h5>12th Feb, 2017 at 05:56 pm</h5>
-                      <a class="reply_btn" href="#">Reply</a>
-                    </div>
-                  </div>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
-                  </p>
-                </div>
-                <div class="review_item">
-                  <div class="media">
-                    <div class="d-flex">
-                      <img
-                      src="img/product/single-product/review-3.png"
-                      alt=""
-                      />
-                    </div>
-                    <div class="media-body">
-                      <h4>Blake Ruiz</h4>
-                      <h5>12th Feb, 2017 at 05:56 pm</h5>
-                      <a class="reply_btn" href="#">Reply</a>
-                    </div>
-                  </div>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
+                    {{comment.comment}}
                   </p>
                 </div>
               </div>
             </div>
             <div class="col-lg-6">
-              <div class="review_box">
+              <div class="review_box" v-if="showSession">
                 <h4>Post a comment</h4>
-                <form
+                <form @submit.prevent="comment"
                   class="row contact_form"
-                  action="contact_process.php"
+                  action=""
                   method="post"
                   id="contactForm1"
                   novalidate="novalidate"
                   >
                   <div class="col-md-12">
                     <div class="form-group">
-                      <input
-                      type="text"
+                      <textarea v-model="commentText"
                       class="form-control"
-                      id="name1"
-                      name="name"
-                      placeholder="Your Full name"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input
-                      type="email"
-                      class="form-control"
-                      id="email1"
-                      name="email"
-                      placeholder="Email Address"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input
-                      type="text"
-                      class="form-control"
-                      id="number1"
-                      name="number"
-                      placeholder="Phone Number"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <textarea
-                      class="form-control"
-                      name="message"
+                      name="comment"
                       id="message1"
-                      rows="1"
-                      placeholder="Message"
+                      rows="2"
+                      placeholder="Comment"
                       ></textarea>
                     </div>
                   </div>
@@ -302,12 +219,15 @@
                     <button
                     type="submit"
                     value="submit"
-                    class="btn submit_btn"
+                    class="btn btn-success"
                     >
-                    Submit Now
+                    Comment Now
                     </button>
                   </div>
                 </form>
+              </div>
+              <div v-else>
+                <router-link to="/user-login">Login to Comment</router-link>
               </div>
             </div>
           </div>
@@ -568,36 +488,58 @@
 export default {
 name: "singleProduct",
 data(){
-return{
-cartQty:'1',
-id:''
-}
+  return{
+  cartQty:'1',
+  id:'',
+  commentText:''
+  }
 },
 mounted(){
-this.$Progress.start();
-this.$store.dispatch("getProducstbyId", this.$route.params.id)
-this.$Progress.finish();
+  this.$Progress.start();
+  this.$store.dispatch("getProducstbyId", this.$route.params.id);
+  this.$store.dispatch("getProductComment", this.$route.params.id);
+  this.$Progress.finish();
 },
 computed:{
-singleProduct(){
-return this.$store.getters.getSingleProduct
-}
+  singleProduct(){
+    return this.$store.getters.getSingleProduct
+  },
+  showSession(){
+    return this.$store.getters.getSessionData
+  },
+  showComment(){
+    return this.$store.getters.getCommentData;
+  }
 },
 methods: {
-addToCart(){
-this.$Progress.start();
-axios.post('/add-cart',{
-qty: this.cartQty,
-id: this.singleProduct.id
-})
-.then((response)=>{
+  addToCart(){
+  this.$Progress.start();
+  axios.post('/add-cart',{
+    qty: this.cartQty,
+    id: this.singleProduct.id
+  })
+  .then((response)=>{
 
-this.$store.dispatch("getCartItem");
-this.$store.dispatch("countCart");
-this.$store.dispatch("getAllCarttotal");
-this.$Progress.finish()
-})
-}
+    this.$store.dispatch("getCartItem");
+    this.$store.dispatch("countCart");
+    this.$store.dispatch("getAllCarttotal");
+    this.$Progress.finish()
+  })
+  },
+  comment(){
+    this.$Progress.start();
+    axios.post('/product-comment',{
+      commenterId: this.showSession.id,
+      commentText: this.commentText,
+      productId: this.$route.params.id
+    })
+    .then((response)=>{
+      //console.log(response.data)
+     this.$store.dispatch("getProductComment", this.$route.params.id);
+     this.commentText=''
+     this.$Progress.finish();
+    })
+  }
 }
 }
 </script>

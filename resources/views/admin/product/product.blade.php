@@ -53,12 +53,14 @@
                                     <th>Price</th>
                                     <th>Image</th>
                                     <th>Status</th>
+                                    <th>Uploaded_by</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @php($sl = 1)
                                     @foreach($product as $products)
+                                    @if(Auth::user()->id == 1)
                                     <tr>
                                         <td>{{$sl++}}</td>
                                         <td>{{$products->cat_name}}</td>
@@ -68,7 +70,8 @@
                                         <td>
                                             <img src="{{asset($products->image)}}" height="100px" alt="image">
                                         </td>
-                                        <td>{{$products->status}}</td>
+                                        <td>{{$products->status=='1'?'Active':'Inactive'}}</td>
+                                        <td>{{$products->name}}</td>
                                         <td>
                                             <a href="#viewProductModal" class="btn btn-info" data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
@@ -84,6 +87,34 @@
                                             </form>
                                         </td>
                                     </tr>
+                                    @elseif($products->uploaded_by == Auth::user()->id)
+                                    <tr>
+                                        <td>{{$sl++}}</td>
+                                        <td>{{$products->cat_name}}</td>
+                                        <td>{{$products->brand_name}}</td>
+                                        <td>{{$products->product_name}}</td>
+                                        <td>৳ {{$products->product_price}}</td>
+                                        <td>
+                                            <img src="{{asset($products->image)}}" height="100px" alt="image">
+                                        </td>
+                                        <td>{{$products->status=='1'?'Active':'Inactive'}}</td>
+                                        <td>{{$products->name}}</td>
+                                        <td>
+                                            <a href="#viewProductModal" class="btn btn-info" data-toggle="modal">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="#editProductModal" id="{{$products->id}}" class="edit btn btn-success" title="Edit">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            
+                                            <form action="{{route('product.destroy',$products->id)}}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endif
                                     @endforeach
                                 </tbody>
                                 <tfoot>
@@ -95,6 +126,7 @@
                                     <th>Price</th>
                                     <th>Image</th>
                                     <th>Status</th>
+                                    <th>Uploaded_by</th>
                                     <th>Action</th>
                                 </tr>
                                 </tfoot>
@@ -109,8 +141,10 @@
     
     {{--Add Product modal here--}}
     @include('admin.product.add-product')
+
     {{--Edit Product modal here--}}
     @include('admin.product.edit-product')
+    
     {{--View Product modal here--}}
     @include('admin.product.view-product')
 
@@ -143,6 +177,8 @@
                             $('#e_quantity').val(data.quantity);
                             $('#e_product_size').val(data.size);
                             $('#e_product_status').val(data.status);
+
+                            $('#updateProductForm').attr('action', 'product/'+id);
                     }
                 })
             });

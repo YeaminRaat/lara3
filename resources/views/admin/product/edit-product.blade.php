@@ -18,6 +18,7 @@
             @endif
             <form id="updateProductForm" method="post" action="" enctype="multipart/form-data">
                 @csrf
+                @method('put')
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="product_status">Category</label>

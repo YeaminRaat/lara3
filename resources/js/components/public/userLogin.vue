@@ -58,7 +58,7 @@
                         this.success = 'Login Success'
                         this.form = []
                         this.$store.dispatch("customerSession");
-                        this.$router.push('/')
+                        this.$router.go(-1)
                     }
                 })
             }

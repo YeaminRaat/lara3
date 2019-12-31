@@ -5348,6 +5348,48 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(process) {//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5393,10 +5435,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      type: ''
+      type: '',
+      publishedKey: process.env.STRIPE_KEY
     };
   },
-  mounted: function mounted() {},
+  created: {
+    showSubtotal: function showSubtotal() {
+      return this.$store.getters.getCartSubtotal;
+    }
+  },
   methods: {
     orderConfirm: function orderConfirm() {
       var _this = this;
@@ -5413,6 +5460,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -6006,102 +6054,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "singleProduct",
   data: function data() {
     return {
       cartQty: '1',
-      id: ''
+      id: '',
+      commentText: ''
     };
   },
   mounted: function mounted() {
     this.$Progress.start();
     this.$store.dispatch("getProducstbyId", this.$route.params.id);
+    this.$store.dispatch("getProductComment", this.$route.params.id);
     this.$Progress.finish();
   },
   computed: {
     singleProduct: function singleProduct() {
       return this.$store.getters.getSingleProduct;
+    },
+    showSession: function showSession() {
+      return this.$store.getters.getSessionData;
+    },
+    showComment: function showComment() {
+      return this.$store.getters.getCommentData;
     }
   },
   methods: {
@@ -6120,6 +6096,23 @@ __webpack_require__.r(__webpack_exports__);
         _this.$store.dispatch("getAllCarttotal");
 
         _this.$Progress.finish();
+      });
+    },
+    comment: function comment() {
+      var _this2 = this;
+
+      this.$Progress.start();
+      axios.post('/product-comment', {
+        commenterId: this.showSession.id,
+        commentText: this.commentText,
+        productId: this.$route.params.id
+      }).then(function (response) {
+        //console.log(response.data)
+        _this2.$store.dispatch("getProductComment", _this2.$route.params.id);
+
+        _this2.commentText = '';
+
+        _this2.$Progress.finish();
       });
     }
   }
@@ -6196,7 +6189,7 @@ __webpack_require__.r(__webpack_exports__);
 
           _this.$store.dispatch("customerSession");
 
-          _this.$router.push('/');
+          _this.$router.go(-1);
         }
       });
     }
@@ -57221,47 +57214,6 @@ var render = function() {
                   _vm._l(_vm.showCartItem, function(cart) {
                     return _c("tr", [
                       _c("td", [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.checkItem,
-                              expression: "checkItem"
-                            }
-                          ],
-                          attrs: { type: "checkbox", name: "" },
-                          domProps: {
-                            value: cart.rowId,
-                            checked: Array.isArray(_vm.checkItem)
-                              ? _vm._i(_vm.checkItem, cart.rowId) > -1
-                              : _vm.checkItem
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.checkItem,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = cart.rowId,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 && (_vm.checkItem = $$a.concat([$$v]))
-                                } else {
-                                  $$i > -1 &&
-                                    (_vm.checkItem = $$a
-                                      .slice(0, $$i)
-                                      .concat($$a.slice($$i + 1)))
-                                }
-                              } else {
-                                _vm.checkItem = $$c
-                              }
-                            }
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
                         _c("div", { staticClass: "media" }, [
                           _c("div", { staticClass: "d-flex" }, [
                             _c("img", {
@@ -57339,7 +57291,7 @@ var render = function() {
                   _c("tr", { staticClass: "bottom_button" }, [
                     _c("td"),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(_vm.checkItem))]),
+                    _c("td"),
                     _vm._v(" "),
                     _vm._m(1),
                     _vm._v(" "),
@@ -57420,8 +57372,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }),
-        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Product")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Price")]),
@@ -58515,6 +58465,7 @@ var render = function() {
                             ],
                             attrs: {
                               type: "search",
+                              autocomplete: "off",
                               name: "search",
                               "data-toggle": "dropdown",
                               role: "button",
@@ -58783,6 +58734,9 @@ var render = function() {
                         },
                         domProps: { checked: _vm._q(_vm.type, "cash") },
                         on: {
+                          click: function($event) {
+                            _vm.isHidden == true
+                          },
                           change: function($event) {
                             _vm.type = "cash"
                           }
@@ -58876,13 +58830,63 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-                  [_vm._v("Confirm Order")]
-                )
+                _vm.type == "cash"
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Confirm Order")]
+                    )
+                  : _vm._e()
               ]
-            )
+            ),
+            _vm._v(" "),
+            _vm.type == "stripe"
+              ? _c("div", [
+                  _c(
+                    "form",
+                    {
+                      staticClass: "require-validation",
+                      attrs: {
+                        role: "form",
+                        action: "",
+                        method: "post",
+                        "data-cc-on-file": "false",
+                        "data-stripe-publishable-key": "",
+                        id: "payment-form"
+                      },
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.orderConfirm($event)
+                        }
+                      }
+                    },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "row" }, [
+                        _c("div", { staticClass: "col-xs-12" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary btn-lg btn-block",
+                              attrs: { type: "submit" }
+                            },
+                            [_vm._v("Pay Now " + _vm._s(_vm.showSubtotal))]
+                          )
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              : _vm._e()
           ])
         ])
       ])
@@ -58896,6 +58900,86 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header text-center" }, [
       _c("h3", [_vm._v("Choose a Payment Method!")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row row" }, [
+      _c("div", { staticClass: "col-xs-12 form-group required" }, [
+        _c("label", { staticClass: "control-label" }, [_vm._v("Name on Card")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { size: "50", type: "text" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row row" }, [
+      _c("div", { staticClass: "col-xs-12 form-group required" }, [
+        _c("label", { staticClass: "control-label" }, [_vm._v("Card Number")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control card-number",
+          attrs: { autocomplete: "off", size: "50", type: "text" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row row" }, [
+      _c("div", { staticClass: "col-xs-12 col-md-4 form-group cvc required" }, [
+        _c("label", { staticClass: "control-label" }, [_vm._v("CVC")]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "form-control card-cvc",
+          attrs: {
+            autocomplete: "off",
+            placeholder: "ex. 311",
+            size: "4",
+            type: "text"
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-xs-12 col-md-4 form-group expiration required" },
+        [
+          _c("label", { staticClass: "control-label" }, [
+            _vm._v("Expiration Month")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control card-expiry-month",
+            attrs: { placeholder: "MM", size: "2", type: "text" }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-xs-12 col-md-4 form-group expiration required" },
+        [
+          _c("label", { staticClass: "control-label" }, [
+            _vm._v("Expiration Year")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control card-expiry-year",
+            attrs: { placeholder: "YYYY", size: "4", type: "text" }
+          })
+        ]
+      )
     ])
   }
 ]
@@ -59360,9 +59444,128 @@ var render = function() {
             _vm._v(" "),
             _vm._m(3),
             _vm._v(" "),
-            _vm._m(4),
+            _c(
+              "div",
+              {
+                staticClass: "tab-pane fade",
+                attrs: {
+                  id: "contact",
+                  role: "tabpanel",
+                  "aria-labelledby": "contact-tab"
+                }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c(
+                      "div",
+                      { staticClass: "comment_list" },
+                      _vm._l(_vm.showComment, function(comment) {
+                        return _c("div", { staticClass: "review_item" }, [
+                          _c("div", { staticClass: "media" }, [
+                            _vm._m(4, true),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "media-body" }, [
+                              _c("h4", [
+                                _vm._v(
+                                  _vm._s(
+                                    comment.first_name + " " + comment.last_name
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("h5", [_vm._v(_vm._s(comment.created_at))])
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("p", [
+                            _vm._v(
+                              "\r\n                    " +
+                                _vm._s(comment.comment) +
+                                "\r\n                  "
+                            )
+                          ])
+                        ])
+                      }),
+                      0
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _vm.showSession
+                      ? _c("div", { staticClass: "review_box" }, [
+                          _c("h4", [_vm._v("Post a comment")]),
+                          _vm._v(" "),
+                          _c(
+                            "form",
+                            {
+                              staticClass: "row contact_form",
+                              attrs: {
+                                action: "",
+                                method: "post",
+                                id: "contactForm1",
+                                novalidate: "novalidate"
+                              },
+                              on: {
+                                submit: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.comment($event)
+                                }
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "col-md-12" }, [
+                                _c("div", { staticClass: "form-group" }, [
+                                  _c("textarea", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.commentText,
+                                        expression: "commentText"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      name: "comment",
+                                      id: "message1",
+                                      rows: "2",
+                                      placeholder: "Comment"
+                                    },
+                                    domProps: { value: _vm.commentText },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.commentText = $event.target.value
+                                      }
+                                    }
+                                  })
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(5)
+                            ]
+                          )
+                        ])
+                      : _c(
+                          "div",
+                          [
+                            _c(
+                              "router-link",
+                              { attrs: { to: "/user-login" } },
+                              [_vm._v("Login to Comment")]
+                            )
+                          ],
+                          1
+                        )
+                  ])
+                ])
+              ]
+            ),
             _vm._v(" "),
-            _vm._m(5)
+            _vm._m(6)
           ]
         )
       ])
@@ -59493,208 +59696,24 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "tab-pane fade",
-        attrs: {
-          id: "contact",
-          role: "tabpanel",
-          "aria-labelledby": "contact-tab"
-        }
-      },
-      [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-lg-6" }, [
-            _c("div", { staticClass: "comment_list" }, [
-              _c("div", { staticClass: "review_item" }, [
-                _c("div", { staticClass: "media" }, [
-                  _c("div", { staticClass: "d-flex" }, [
-                    _c("img", {
-                      attrs: {
-                        src: "img/product/single-product/review-1.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "media-body" }, [
-                    _c("h4", [_vm._v("Blake Ruiz")]),
-                    _vm._v(" "),
-                    _c("h5", [_vm._v("12th Feb, 2017 at 05:56 pm")]),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "reply_btn", attrs: { href: "#" } },
-                      [_vm._v("Reply")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\r\n                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,\r\n                    sed do eiusmod tempor incididunt ut labore et dolore magna\r\n                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation\r\n                    ullamco laboris nisi ut aliquip ex ea commodo\r\n                  "
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "review_item reply" }, [
-                _c("div", { staticClass: "media" }, [
-                  _c("div", { staticClass: "d-flex" }, [
-                    _c("img", {
-                      attrs: {
-                        src: "img/product/single-product/review-2.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "media-body" }, [
-                    _c("h4", [_vm._v("Blake Ruiz")]),
-                    _vm._v(" "),
-                    _c("h5", [_vm._v("12th Feb, 2017 at 05:56 pm")]),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "reply_btn", attrs: { href: "#" } },
-                      [_vm._v("Reply")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\r\n                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,\r\n                    sed do eiusmod tempor incididunt ut labore et dolore magna\r\n                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation\r\n                    ullamco laboris nisi ut aliquip ex ea commodo\r\n                  "
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "review_item" }, [
-                _c("div", { staticClass: "media" }, [
-                  _c("div", { staticClass: "d-flex" }, [
-                    _c("img", {
-                      attrs: {
-                        src: "img/product/single-product/review-3.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "media-body" }, [
-                    _c("h4", [_vm._v("Blake Ruiz")]),
-                    _vm._v(" "),
-                    _c("h5", [_vm._v("12th Feb, 2017 at 05:56 pm")]),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "reply_btn", attrs: { href: "#" } },
-                      [_vm._v("Reply")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    "\r\n                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,\r\n                    sed do eiusmod tempor incididunt ut labore et dolore magna\r\n                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation\r\n                    ullamco laboris nisi ut aliquip ex ea commodo\r\n                  "
-                  )
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-lg-6" }, [
-            _c("div", { staticClass: "review_box" }, [
-              _c("h4", [_vm._v("Post a comment")]),
-              _vm._v(" "),
-              _c(
-                "form",
-                {
-                  staticClass: "row contact_form",
-                  attrs: {
-                    action: "contact_process.php",
-                    method: "post",
-                    id: "contactForm1",
-                    novalidate: "novalidate"
-                  }
-                },
-                [
-                  _c("div", { staticClass: "col-md-12" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          id: "name1",
-                          name: "name",
-                          placeholder: "Your Full name"
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-12" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "email",
-                          id: "email1",
-                          name: "email",
-                          placeholder: "Email Address"
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-12" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("input", {
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          id: "number1",
-                          name: "number",
-                          placeholder: "Phone Number"
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-12" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("textarea", {
-                        staticClass: "form-control",
-                        attrs: {
-                          name: "message",
-                          id: "message1",
-                          rows: "1",
-                          placeholder: "Message"
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-12 text-right" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn submit_btn",
-                        attrs: { type: "submit", value: "submit" }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                    Submit Now\r\n                    "
-                        )
-                      ]
-                    )
-                  ])
-                ]
-              )
-            ])
-          ])
-        ])
-      ]
-    )
+    return _c("div", { staticClass: "d-flex" }, [
+      _c("img", { attrs: { src: "images/avatar.png", alt: "User" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-12 text-right" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success",
+          attrs: { type: "submit", value: "submit" }
+        },
+        [_vm._v("\r\n                    Comment Now\r\n                    ")]
+      )
+    ])
   },
   function() {
     var _vm = this
@@ -77546,7 +77565,8 @@ __webpack_require__.r(__webpack_exports__);
     cartProduct: [],
     countCart: [],
     subtotalCart: [],
-    customerSession: []
+    customerSession: [],
+    productComment: []
   },
   getters: {
     getCategory: function getCategory(state) {
@@ -77578,6 +77598,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     getSessionData: function getSessionData(state) {
       return state.customerSession;
+    },
+    getCommentData: function getCommentData(state) {
+      return state.productComment;
     }
   },
   actions: {
@@ -77640,6 +77663,12 @@ __webpack_require__.r(__webpack_exports__);
         //console.log(response.data.s_customer)
         context.commit("sessionData", response.data.s_customer);
       });
+    },
+    getProductComment: function getProductComment(context, payload) {
+      axios.get('/product-comment/' + payload).then(function (response) {
+        //console.log(response.data)
+        context.commit("commentData", response.data);
+      });
     }
   },
   mutations: {
@@ -77672,6 +77701,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     sessionData: function sessionData(state, data) {
       return state.customerSession = data;
+    },
+    commentData: function commentData(state, data) {
+      return state.productComment = data;
     }
   }
 });

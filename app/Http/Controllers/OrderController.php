@@ -9,6 +9,7 @@ use App\Model\OrderDetail;
 use App\Model\Payment;
 use Session;
 use Cart;
+use Stripe;
 
 class OrderController extends Controller
 {
@@ -42,6 +43,41 @@ class OrderController extends Controller
 
     public function confirmOrder(Request $request){
         if ($request->type == 'cash') {
+            $order = new Order();
+            $order->customer_id = Session::get('customerId');
+            $order->shipping_id = Session::get('shippingId');
+            $order->order_total = Cart::subtotal();
+            $order->save();
+
+            $payment = new Payment();
+            $payment->order_id = $order->id;
+            $payment->payment_info = $request->type;
+            $payment->save();
+
+            $cartProducts = Cart::content();
+            foreach($cartProducts as $cartProduct){
+                $orderDetails = new OrderDetail();
+                $orderDetails->order_id = $order->id;
+                $orderDetails->product_id = $cartProduct->id;
+                $orderDetails->product_name = $cartProduct->name;
+                $orderDetails->product_price = $cartProduct->price;
+                $orderDetails->product_quantity = $cartProduct->qty;
+                $orderDetails->save();
+            }
+            Cart::destroy();
+
+            return response()->json('Order Confirmed');
+        }
+        if ($request->type == 'stripe') {
+
+            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            Stripe\Charge::create ([
+                    "amount" => 100 * 100,
+                    "currency" => "usd",
+                    "source" => $request->stripeToken,
+                    "description" => "Test payment from itsolutionstuff.com." 
+            ]);
+
             $order = new Order();
             $order->customer_id = Session::get('customerId');
             $order->shipping_id = Session::get('shippingId');

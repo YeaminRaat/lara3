@@ -9,7 +9,8 @@ export default {
     cartProduct: [],
     countCart: [],
     subtotalCart: [],
-    customerSession:[]
+    customerSession:[],
+    productComment:[]
   },
 
   getters: {
@@ -42,6 +43,9 @@ export default {
     },
     getSessionData(state){
       return state.customerSession
+    },
+    getCommentData(state){
+      return state.productComment
     }
   },
 
@@ -115,6 +119,13 @@ export default {
             //console.log(response.data.s_customer)
             context.commit("sessionData", response.data.s_customer)
           })
+    },
+    getProductComment(context, payload){
+      axios.get('/product-comment/'+ payload)
+          .then((response)=>{
+            //console.log(response.data)
+            context.commit("commentData", response.data)
+          })
     }
   },
 
@@ -148,6 +159,9 @@ export default {
     },
     sessionData(state, data){
       return state.customerSession = data
+    },
+    commentData(state, data){
+      return state.productComment = data
     }
   }
 }

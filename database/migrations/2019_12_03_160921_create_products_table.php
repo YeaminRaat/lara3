@@ -24,9 +24,10 @@ class CreateProductsTable extends Migration
             $table->float('product_price',10,2);
             $table->integer('quantity');
             $table->string('size');
-            $table->text('image');
-            $table->text('gallery_image');
+            $table->text('image')->default('default-product.png');
+            $table->text('gallery_image')->nullable();
             $table->integer('status');
+            $table->string('uploaded_by');
             $table->timestamps();
         });
     }

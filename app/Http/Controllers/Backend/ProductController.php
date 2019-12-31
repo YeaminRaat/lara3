@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Auth;
 use App\Model\Product;
 use App\Model\Category;
 use App\Model\Brand;
@@ -22,8 +23,11 @@ class ProductController extends Controller
         $product = DB::table('products')
             ->join('categories','products.cat_id', '=', 'categories.id')
             ->join('brands','products.brand_id', '=', 'brands.id')
-            ->select('products.*','categories.cat_name','brands.brand_name')
+            ->join('users','products.uploaded_by', '=', 'users.id')
+            ->select('products.*','categories.cat_name','brands.brand_name','users.name')
             ->get();
+
+            //dd($product);
         $category = Category::where('cat_status', 1)->get();
         $brand = Brand::where('brand_status', 1)->get();
 
@@ -80,9 +84,9 @@ class ProductController extends Controller
         $product->product_price = $request->product_price;
         $product->quantity = $request->quantity;
         $product->size = $request->size;
-        
-        
         $product->status = $request->status;
+        $product->uploaded_by = Auth::user()->id;
+
         $product->save();
 
         return back();
@@ -120,7 +124,39 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+        $imageUrl = '';
+        if ($file = $request->file('product_image')) {
+            $fileName = date("YmdHis")."_".$file->getClientOriginalName();
+            $directory = 'admin/images/product_images/';
+            $imageUrl = $directory.$fileName;
+            $file->move($directory, $fileName);
+            $product->image = $imageUrl;
+        }
+        if ($request->file('gallery_image')) {
+            foreach ($request->file('gallery_image') as $image) {
+                $fileName = $image->getClientOriginalName();
+                $directory = 'admin/images/product_images/';
+                $g_imageUrl = $directory.$fileName;
+                $image->move($directory, $fileName);
+                $data[] = $g_imageUrl;
+            }
+            $product->gallery_image = json_encode($data);
+        }
+        $product->cat_id = $request->cat_id;
+        $product->brand_id = $request->brand_id;
+        $product->product_name = $request->product_name;
+        $product->short_desc = $request->short_desc;
+        $product->long_desc = $request->long_desc;
+        $product->discount_price = $request->discount_price;
+        $product->product_price = $request->product_price;
+        $product->quantity = $request->quantity;
+        $product->size = $request->size;
+        $product->status = $request->status;
+        
+        $product->save();
+
+        return back();
     }
 
     /**

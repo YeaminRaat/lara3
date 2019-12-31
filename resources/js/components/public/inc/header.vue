@@ -79,12 +79,12 @@
               <div class="col-lg-5 pr-0">
                 <ul class="nav navbar-nav navbar-right right_nav pull-right">
                   <li class="nav-item submenu dropdown">
-                    <input type="search" v-model="searchKey" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    <input type="search" autocomplete='off' v-model="searchKey" name="search" data-toggle="dropdown" role="button" aria-haspopup="true"
                       aria-expanded="false" placeholder="search product">
                       <ul class="dropdown-menu" v-if="searchKey">
-                      <li class="nav-item" v-for="search in searchResult">
-                        <router-link class="nav-link" :to="`/single-product/${search.id}`">{{search.product_name}}</router-link>
-                      </li>
+                        <li class="nav-item" v-for="search in searchResult">
+                          <router-link class="nav-link" :to="`/single-product/${search.id}`">{{search.product_name}}</router-link>
+                        </li>
                       </ul>
                     <a href="#" class="icons">
                       <i class="ti-search" aria-hidden="true"></i>

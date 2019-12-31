@@ -37,9 +37,6 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="h4">Order List</span>
-                            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#addBrandModal">
-                                <i class="fa fa-plus"><b> Add New</b></i>
-                            </button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -59,7 +56,7 @@
                                 <tr>
                                     <td>{{$orders->id}}</td>
                                     <td>{{$orders->customer->first_name.' '.$orders->customer->last_name}}</td>
-                                    <td>{{$orders->order_total}}</td>
+                                    <td>৳ {{$orders->order_total}}</td>
                                     <td>{{$orders->order_status}}</td>
                                     <td>{{$orders->payment->payment_status}}</td>
                                     <td>

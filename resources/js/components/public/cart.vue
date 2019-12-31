@@ -8,7 +8,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col"></th>
+                  <!-- <th scope="col"></th> -->
                   <th scope="col">Product</th>
                   <th scope="col">Price</th>
                   <th scope="col">Quantity</th>
@@ -18,7 +18,7 @@
               </thead>
               <tbody>
                 <tr v-for='cart in showCartItem'>
-                  <td><input type="checkbox" :value="cart.rowId"  v-model="checkItem" name=""></td>
+                  <!-- <td><input type="checkbox" :value="cart.rowId"  v-model="checkItem" name=""></td> -->
                   <td>
                     <div class="media">
                       <div class="d-flex">
@@ -49,7 +49,7 @@
                   <td>
                     
                   </td>
-                  <td>{{checkItem}}</td>
+                  <td><!-- {{checkItem}} --></td>
                   <td><h5>Subtotal</h5></td>
                   <td>
                     <h5>৳ {{showSubtotal}}</h5>
